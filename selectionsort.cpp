@@ -1,138 +1,189 @@
 #include<iostream>
+#include<cstring>
 using namespace std;
+
 int n;
-class book{
-    public:
-int cost;
-char tt[10];
-char author[10];
+
+class book {
+    int cost;
+    char author[10], title[10];
 public:
-void accept();
-void display();
-void asc();
-void dec();
-void dcostless();
-void counts();
-void deletT();
-void delet();
+    void accept();
+    void display();
+    void ascend();
+    void descend();
+    void less500();
+    void more500();
+    void deleteT();
+    void deleteWT();
+} B[100];
 
-}b[100],c[100];
-
-void book::accept(){
-    cout<<"enter costs:";
-    cout<<"\nenter the title of the book:";
-    cout<<"\nenter auther:";
-    cin>>cost>>tt>>author;
+void book::accept() {
+    cout << "Enter the title: ";
+    cin >> title;
+    cout << "Enter the author: ";
+    cin >> author;
+    cout << "Enter the cost: ";
+    cin >> cost;
 }
-void book::display(){
-    cout<<"\n"<<"title"<<"\t"<<"cost"<<"\t"<<"author";
 
+void book::display() {
+    cout << "\n" << title << "\t" << author << "\t" << cost;
 }
-void book :: asc(){
-    book c;
-    int i,j;
-    for(i=0;i<n;i++){
-        for(j=i;j<n;j++){
-            if(b[i].cost>b[j].cost){
-                c=b[i];
-                b[i]=b[j];
-                b[j]=c;
+
+void book::ascend() {
+    book T;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (B[i].cost > B[j].cost) {
+                T = B[i];
+                B[i] = B[j];
+                B[j] = T;
             }
         }
     }
+    cout << "\nBooks sorted in ascending order of cost:";
+    for (int i = 0; i < n; i++) {
+        B[i].display();
+    }
 }
-void book::dec(){
-    book c;
-    int i,j;
-    for(i=0;i<n;i++){
-        for(j=i;j<n;j++){
-            if(b[i].cost<b[j].cost){
-                c=b[i];
-                b[i]=b[j];
-                b[j]=c;
+
+void book::descend() {
+    book T;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (B[i].cost < B[j].cost) {
+                T = B[i];
+                B[i] = B[j];
+                B[j] = T;
             }
         }
     }
-}
-void book:: dcostless(){
-    for(int i=0;i<n;i++){
-        if(b[i].cost<500){
-            b[i].display();
-        }
+    cout << "\nBooks sorted in descending order of cost:";
+    for (int i = 0; i < n; i++) {
+        B[i].display();
     }
 }
-void book::counts(){
-    int count=0;
-    for(int i=0;i<n;i++){
-        if(b[i].cost>500){
-            b[i].display();
+
+void book::less500() {
+    int count = 0;
+    cout << "\nBooks costing less than 500:";
+    for (int i = 0; i < n; i++) {
+        if (B[i].cost < 500) {
+            B[i].display();
+            count++;
+        }
+    }cout << "\nTotal number of books having cost less than 500: " << count;
+}
+
+void book::more500() {
+    int count = 0;
+    cout << "\nBooks costing more than 500:";
+    for (int i = 0; i < n; i++) {
+        if (B[i].cost > 500) {
+            B[i].display();
             count++;
         }
     }
+    cout << "\nTotal number of books having cost more than 500: " << count;
 }
-void book::deletT(){
-    c[0]=b[0];
-    int j=0;
-    for(int i=0;i<n;i++){
-        if((b[i].tt!=c[j].tt) && (b[i].author!=c[j].author)){
-            j++;
-            c[j]=b[i];
-        }
-    }
-}
-void book::delet(){
-    int j=0;
-    for(int i=0;i<n;i++){
-        if((b[i].tt!=b[j].tt)&&(b[i].author!=b[j].author)){
-j++;
-b[j]=b[i];
-        }
-    }
-}
-int main(){
-    int ch,i,choice;
-    cout<<"enter how many entries";
-    cin>>n;
-    do{
-        cout<<"\n"<<"1.accept"<<"\n"<<"2.ascending"<<"\n"<<"3.descending"<<"\n"<<"4.count book cost greater than 500";
-        cout<<"5.display book cost less than 500"<<"\n"<<"6.delet dublicate entries with temp array"<<"\n"<<"7.delete dublicat"<<"\n"<<"8.display";
-        cout<<"enter choice";
-cin>>ch;
-switch(ch){
-    case 1:
-    for(i=0;i<n;i++){
-        b[i].accept();
-    }
-    break;
-    case 2:
-    b[i].asc();
-    break;
-    case 3:
-    b[i].dec();
-    break;
-    case 4:
-    b[i].dcostless();
-    break;
-    case 5:
-    b[i].counts();
-    break;
-    case 6:
-    b[i].deletT();
-    break;
-    case 7:
-    b[i].delet();
-    break;
-    case 8:
-    for(i=0;i<n;i++){
-        b[i].display();
-    }
-    default:
-                cout << "\n--Wrong choice--";
+
+void book::deleteT() {
+    book C[100];
+    int j = 0;
+    for (int i = 0; i < n; i++) {
+        bool exists = false;
+        for (int k = 0; k < j; k++) {
+            if (strcmp(B[i].title, C[k].title) == 0 && strcmp(B[i].author, C[k].author) == 0) {
+                exists = true;
                 break;
-    
+            }
+        }
+        if (!exists) {
+            C[j++] = B[i];
+        }
+    }
+    cout << "\nBooks after deleting duplicates based on title and author:";
+    for (int i = 0; i < j; i++) {
+        C[i].display();
+    }
+    n = j; // Update n to reflect the new count of books
 }
-cout << "\nDo you want to continue (0/1)? ";
-        cin >> choice;
-    }while(choice==1);
+
+void book::deleteWT() {
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n;) {
+            if (strcmp(B[i].title, B[j].title) == 0 && strcmp(B[i].author, B[j].author) == 0) {
+                // Shift all elements to the left to overwrite the duplicate
+                for (int k = j; k < n - 1; k++) {
+                    B[k] = B[k + 1];
+                }
+                n--; // Reduce the size of the array
+            } else {
+                j++; // Move to the next element only if no deletion happened
+            }
+        }
+    }
+    cout << "\nBooks after deleting duplicates based on title and author (without using temporary array):";
+    for (int i = 0; i < n; i++) {
+        B[i].display();
+    }
+}
+
+int main() {
+    int ch;
+    cout << "Enter total number of entries: ";
+    cin >> n;
+
+    for (int i = 0; i < n; i++) {
+        B[i].accept();
+    }
+
+    do {
+        cout << "\n\nMenu:";
+        cout << "\n1. Display all books";
+        cout << "\n2. Sort books in ascending order of cost";
+        cout << "\n3. Sort books in descending order of cost";
+        cout << "\n4. Display books costing less than 500";
+        cout << "\n5. Display books costing more than 500";
+        cout << "\n6. Delete duplicates using a temporary array";
+        cout << "\n7. Delete duplicates without using a temporary array";
+        cout << "\n8. Exit";
+        cout << "\nEnter your choice: ";
+        cin >> ch;
+
+        switch (ch) {
+            case 1:
+                cout << "\nTitle\tAuthor\tCost";
+                for (int i = 0; i < n; i++) {
+                    B[i].display();
+                }
+                break;
+            case 2:
+                B[0].ascend();
+                break;
+            case 3:
+                B[0].descend();
+                break;
+            case 4:
+                B[0].less500();
+                break;
+            case 5:
+                B[0].more500();
+                break;
+            case 6:
+                B[0].deleteT();
+                break;
+            case 7:
+                B[0].deleteWT();
+                break;
+            case 8:
+                cout << "Exiting program.\n";
+                break;
+            default:
+                cout << "Invalid choice, please try again.\n";
+        }
+    } while (ch != 8);
+
     return 0;
 }
